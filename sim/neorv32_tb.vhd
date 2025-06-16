@@ -52,7 +52,7 @@ entity neorv32_tb is
     IMEM_EN             : boolean                        := true;        -- implement processor-internal instruction memory
     IMEM_SIZE           : natural                        := 32*1024;     -- size of processor-internal instruction memory in bytes (use a power of 2)
     DMEM_EN             : boolean                        := true;        -- implement processor-internal data memory
-    DMEM_SIZE           : natural                        := 8*1024;      -- size of processor-internal data memory in bytes (use a power of 2)
+    DMEM_SIZE           : natural                        := 16*1024;      -- size of processor-internal data memory in bytes (use a power of 2)
     ICACHE_EN           : boolean                        := true;        -- implement instruction cache
     ICACHE_NUM_BLOCKS   : natural range 1 to 4096        := 64;          -- i-cache: number of blocks (min 1), has to be a power of 2
     DCACHE_EN           : boolean                        := true;        -- implement data cache
