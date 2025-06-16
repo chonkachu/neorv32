@@ -37,6 +37,8 @@ architecture neorv32_cfs_rtl of neorv32_cfs is
   type cfs_regs_t is array (0 to 3) of std_ulogic_vector(31 downto 0); -- implement 4 registers for this example
   signal cfs_reg_wr : cfs_regs_t; -- for WRITE accesses
   signal cfs_reg_rd : cfs_regs_t; -- for READ accesses
+  signal term      : signed(63 downto 0);
+  signal dot_result : signed(63 downto 0);
 
 begin
 
@@ -163,10 +165,16 @@ begin
   -- The logic below is just a very simple example that transforms data
   -- from an input register into data in an output register.
 
-  cfs_reg_rd(0) <= x"0000000" & "000" & or_reduce_f(cfs_reg_wr(0)); -- OR all bits
-  cfs_reg_rd(1) <= x"0000000" & "000" & xor_reduce_f(cfs_reg_wr(1)); -- XOR all bits
-  cfs_reg_rd(2) <= bit_rev_f(cfs_reg_wr(2)); -- bit reversal
-  cfs_reg_rd(3) <= (others => '1');
+  -- Retorna A*B+C
 
+  term <= signed(cfs_reg_wr(0)) * signed(cfs_reg_wr(1));
+  dot_result <= term + signed(cfs_reg_wr(2));
+
+
+  cfs_reg_rd(0) <= std_logic_vector(resize(dot_result, 32));
+
+  cfs_reg_rd(1) <= (others => '0');
+  cfs_reg_rd(2) <= (others => '0');
+  cfs_reg_rd(3) <= (others => '1');
 
 end neorv32_cfs_rtl;
