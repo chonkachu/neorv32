@@ -21,7 +21,7 @@ use neorv32.neorv32_package.all;
 entity neorv32_top is
   generic (
     -- Processor Clocking --
-    CLOCK_FREQUENCY       : natural                        := 0;           -- clock frequency of clk_i in Hz
+    CLOCK_FREQUENCY       : natural                        := 50_000_000;           -- clock frequency of clk_i in Hz
     HART_BASE             : natural                        := 0;           -- offset in HART_IDs
 
     -- Dual-Core Configuration --
@@ -40,27 +40,27 @@ entity neorv32_top is
     -- RISC-V CPU Extensions --
     RISCV_ISA_C           : boolean                        := false;       -- implement compressed extension
     RISCV_ISA_E           : boolean                        := false;       -- implement embedded RF extension
-    RISCV_ISA_M           : boolean                        := false;       -- implement mul/div extension
-    RISCV_ISA_U           : boolean                        := false;       -- implement user mode extension
-    RISCV_ISA_Zaamo       : boolean                        := false;       -- implement atomic read-modify-write operations extension
-    RISCV_ISA_Zalrsc      : boolean                        := false;       -- implement atomic reservation-set operations extension
-    RISCV_ISA_Zba         : boolean                        := false;       -- implement shifted-add bit-manipulation extension
-    RISCV_ISA_Zbb         : boolean                        := false;       -- implement basic bit-manipulation extension
-    RISCV_ISA_Zbkb        : boolean                        := false;       -- implement bit-manipulation instructions for cryptography
-    RISCV_ISA_Zbkc        : boolean                        := false;       -- implement carry-less multiplication instructions
-    RISCV_ISA_Zbkx        : boolean                        := false;       -- implement cryptography crossbar permutation extension
-    RISCV_ISA_Zbs         : boolean                        := false;       -- implement single-bit bit-manipulation extension
-    RISCV_ISA_Zfinx       : boolean                        := false;       -- implement 32-bit floating-point extension
-    RISCV_ISA_Zicntr      : boolean                        := false;       -- implement base counters
-    RISCV_ISA_Zicond      : boolean                        := false;       -- implement integer conditional operations
-    RISCV_ISA_Zihpm       : boolean                        := false;       -- implement hardware performance monitors
-    RISCV_ISA_Zknd        : boolean                        := false;       -- implement cryptography NIST AES decryption extension
-    RISCV_ISA_Zkne        : boolean                        := false;       -- implement cryptography NIST AES encryption extension
-    RISCV_ISA_Zknh        : boolean                        := false;       -- implement cryptography NIST hash extension
-    RISCV_ISA_Zksed       : boolean                        := false;       -- implement ShangMi block cipher extension
-    RISCV_ISA_Zksh        : boolean                        := false;       -- implement ShangMi hash extension
-    RISCV_ISA_Zmmul       : boolean                        := false;       -- implement multiply-only M sub-extension
-    RISCV_ISA_Zxcfu       : boolean                        := false;       -- implement custom (instr.) functions unit
+    RISCV_ISA_M           : boolean                        := true;       -- implement mul/div extension
+    RISCV_ISA_U           : boolean                        := true;       -- implement user mode extension
+    RISCV_ISA_Zaamo       : boolean                        := true;       -- implement atomic read-modify-write operations extension
+    RISCV_ISA_Zalrsc      : boolean                        := true;       -- implement atomic reservation-set operations extension
+    RISCV_ISA_Zba         : boolean                        := true;       -- implement shifted-add bit-manipulation extension
+    RISCV_ISA_Zbb         : boolean                        := true;       -- implement basic bit-manipulation extension
+    RISCV_ISA_Zbkb        : boolean                        := true;       -- implement bit-manipulation instructions for cryptography
+    RISCV_ISA_Zbkc        : boolean                        := true;       -- implement carry-less multiplication instructions
+    RISCV_ISA_Zbkx        : boolean                        := true;       -- implement cryptography crossbar permutation extension
+    RISCV_ISA_Zbs         : boolean                        := true;       -- implement single-bit bit-manipulation extension
+    RISCV_ISA_Zfinx       : boolean                        := true;       -- implement 32-bit floating-point extension
+    RISCV_ISA_Zicntr      : boolean                        := true;       -- implement base counters
+    RISCV_ISA_Zicond      : boolean                        := true;       -- implement integer conditional operations
+    RISCV_ISA_Zihpm       : boolean                        := true;       -- implement hardware performance monitors
+    RISCV_ISA_Zknd        : boolean                        := true;       -- implement cryptography NIST AES decryption extension
+    RISCV_ISA_Zkne        : boolean                        := true;       -- implement cryptography NIST AES encryption extension
+    RISCV_ISA_Zknh        : boolean                        := true;       -- implement cryptography NIST hash extension
+    RISCV_ISA_Zksed       : boolean                        := true;       -- implement ShangMi block cipher extension
+    RISCV_ISA_Zksh        : boolean                        := true;       -- implement ShangMi hash extension
+    RISCV_ISA_Zmmul       : boolean                        := true;       -- implement multiply-only M sub-extension
+    RISCV_ISA_Zxcfu       : boolean                        := true;       -- implement custom (instr.) functions unit
 
     -- Tuning Options --
     CPU_FAST_MUL_EN       : boolean                        := false;       -- use DSPs for M extension's multiplier
@@ -78,13 +78,13 @@ entity neorv32_top is
     HPM_CNT_WIDTH         : natural range 0 to 64          := 40;          -- total size of HPM counters (0..64)
 
     -- Internal Instruction memory (IMEM) --
-    IMEM_EN               : boolean                        := false;       -- implement processor-internal instruction memory
-    IMEM_SIZE             : natural                        := 16*1024;     -- size of processor-internal instruction memory in bytes (use a power of 2)
+    IMEM_EN               : boolean                        := true;       -- implement processor-internal instruction memory
+    IMEM_SIZE             : natural                        := 32*1024;     -- size of processor-internal instruction memory in bytes (use a power of 2)
     IMEM_OUTREG_EN        : boolean                        := false;       -- enable IMEM output register stage (for improved mapping/timing)
 
     -- Internal Data memory (DMEM) --
-    DMEM_EN               : boolean                        := false;       -- implement processor-internal data memory
-    DMEM_SIZE             : natural                        := 8*1024;      -- size of processor-internal data memory in bytes (use a power of 2)
+    DMEM_EN               : boolean                        := true;       -- implement processor-internal data memory
+    DMEM_SIZE             : natural                        := 16*1024;      -- size of processor-internal data memory in bytes (use a power of 2)
     DMEM_OUTREG_EN        : boolean                        := false;       -- enable DMEM output register stage (for improved mapping/timing)
 
     -- CPU Caches --
@@ -101,9 +101,9 @@ entity neorv32_top is
 
     -- Processor peripherals --
     IO_DISABLE_SYSINFO    : boolean                        := false;       -- disable the SYSINFO module (for advanced users only)
-    IO_GPIO_NUM           : natural range 0 to 32          := 0;           -- number of GPIO input/output pairs (0..32)
-    IO_CLINT_EN           : boolean                        := false;       -- implement core local interruptor (CLINT)
-    IO_UART0_EN           : boolean                        := false;       -- implement primary universal asynchronous receiver/transmitter (UART0)
+    IO_GPIO_NUM           : natural range 0 to 8          := 8;           -- number of GPIO input/output pairs (0..32)
+    IO_CLINT_EN           : boolean                        := true;       -- implement core local interruptor (CLINT)
+    IO_UART0_EN           : boolean                        := true;       -- implement primary universal asynchronous receiver/transmitter (UART0)
     IO_UART0_RX_FIFO      : natural range 1 to 2**15       := 1;           -- RX FIFO depth, has to be a power of two, min 1
     IO_UART0_TX_FIFO      : natural range 1 to 2**15       := 1;           -- TX FIFO depth, has to be a power of two, min 1
     IO_UART1_EN           : boolean                        := false;       -- implement secondary universal asynchronous receiver/transmitter (UART1)
@@ -122,15 +122,15 @@ entity neorv32_top is
     IO_WDT_EN             : boolean                        := false;       -- implement watch dog timer (WDT)
     IO_TRNG_EN            : boolean                        := false;       -- implement true random number generator (TRNG)
     IO_TRNG_FIFO          : natural range 1 to 2**15       := 1;           -- data FIFO depth, has to be a power of two, min 1
-    IO_CFS_EN             : boolean                        := false;       -- implement custom functions subsystem (CFS)
+    IO_CFS_EN             : boolean                        := true;       -- implement custom functions subsystem (CFS)
     IO_NEOLED_EN          : boolean                        := false;       -- implement NeoPixel-compatible smart LED interface (NEOLED)
     IO_NEOLED_TX_FIFO     : natural range 1 to 2**15       := 1;           -- NEOLED FIFO depth, has to be a power of two, min 1
-    IO_GPTMR_EN           : boolean                        := false;       -- implement general purpose timer (GPTMR)
+    IO_GPTMR_EN           : boolean                        := true;       -- implement general purpose timer (GPTMR)
     IO_ONEWIRE_EN         : boolean                        := false;       -- implement 1-wire interface (ONEWIRE)
     IO_ONEWIRE_FIFO       : natural range 1 to 2**15       := 1;           -- RTX FIFO depth, has to be zero or a power of two, min 1
     IO_DMA_EN             : boolean                        := false;       -- implement direct memory access controller (DMA)
     IO_DMA_DSC_FIFO       : natural range 4 to 512         := 4;           -- DMA descriptor FIFO depth, has to be a power of two, min 4
-    IO_SLINK_EN           : boolean                        := false;       -- implement stream link interface (SLINK)
+    IO_SLINK_EN           : boolean                        := true;       -- implement stream link interface (SLINK)
     IO_SLINK_RX_FIFO      : natural range 1 to 2**15       := 1;           -- RX FIFO depth, has to be a power of two, min 1
     IO_SLINK_TX_FIFO      : natural range 1 to 2**15       := 1            -- TX FIFO depth, has to be a power of two, min 1
   );
@@ -220,8 +220,8 @@ entity neorv32_top is
     pwm_o          : out std_ulogic_vector(15 downto 0);                    -- pwm channels
 
     -- Custom Functions Subsystem IO (available if IO_CFS_EN = true) --
-    cfs_in_i       : in  std_ulogic_vector(255 downto 0) := (others => 'L'); -- custom CFS inputs conduit
-    cfs_out_o      : out std_ulogic_vector(255 downto 0);                    -- custom CFS outputs conduit
+    cfs_in_i       : in  std_ulogic_vector(3 downto 0) := (others => 'L'); -- custom CFS inputs conduit
+    cfs_out_o      : out std_ulogic_vector(3 downto 0);                    -- custom CFS outputs conduit
 
     -- NeoPixel-compatible smart LED interface (available if IO_NEOLED_EN = true) --
     neoled_o       : out std_ulogic;                                        -- async serial data line
